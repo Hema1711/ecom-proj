@@ -8,6 +8,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories/1 or /categories/1.json
   def show
+    #sonarQube err
   end
 
   # GET /categories/new
@@ -17,6 +18,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories/1/edit
   def edit
+    #sonarQube err
   end
 
   # POST /categories or /categories.json
