@@ -34,19 +34,6 @@ class CategoriesController < ApplicationController
     end
   end
 
-def create
-  @category = Category.new(category_params)
-  if @category.save
-    format.html { redirect_to @category, notice: "Category was successfully created." }
-  else
-    render :new, status: :unprocessable_entity
-  end
-rescue StandardError => e
-  logger.error "Error creating category: #{e.message}"
-         render :new, status: :internal_server_error
-end
-
-
   # PATCH/PUT /categories/1 or /categories/1.json
   def update
     respond_to do |format|
