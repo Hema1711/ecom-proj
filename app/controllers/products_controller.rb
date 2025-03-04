@@ -8,6 +8,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1 or /products/1.json
   def show
+    #sonarQube err
   end
 
   # GET /products/new
@@ -17,6 +18,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
+    #sonarQube err
   end
 
   # POST /products or /products.json
