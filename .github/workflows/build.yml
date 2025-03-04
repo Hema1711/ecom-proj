@@ -1,19 +1,41 @@
 name: Build
+
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarqube:
-    name: SonarQube
+    name: SonarQube Analysis
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+
+      - name: SonarQube Scan (with Retry)
+        id: sonar_scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        continue-on-error: true  # Allows retry if it fails
+
+      - name: Retry SonarQube Scan (if failed)
+        if: steps.sonar_scan.outcome == 'failure'
+        run: |
+          echo "Retrying SonarCloud scan..."
+          for i in {1..3}; do
+            echo "Attempt $i..."
+            sonar-scanner || sleep 10
+          done
+          exit 1  # If all attempts fail, mark the job as failed
+
+      - name: Check SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        continue-on-error: false  # Fails if quality gate fails
